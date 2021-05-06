@@ -36,7 +36,7 @@
     </column>
     <column>
      <property name="text">
-      <string>имя</string>
+      <string>name</string>
      </property>
     </column>
     <column>
@@ -51,12 +51,12 @@
     </column>
     <column>
      <property name="text">
-      <string>объект страхования</string>
+      <string>insurancy object</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>доп информация</string>
+      <string>other information</string>
      </property>
     </column>
    </widget>

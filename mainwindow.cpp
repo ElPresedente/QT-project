@@ -11,7 +11,11 @@ MainWindow::MainWindow(QWidget *parent)
     table->setColumnWidth(4, 200);
     table->setColumnWidth(5, 200);
 
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table->setSelectionMode(QAbstractItemView::SingleSelection);
+
     currentStatus = widgetStatus::hide;
+    locale = new QLocale();
 }
 
 MainWindow::~MainWindow()
@@ -72,13 +76,16 @@ void MainWindow::changeWidget(widgetStatus status){
             widgetLayout = new QGridLayout(ui->widget);
 
             QPushButton* carbutton = new QPushButton("Car insurance");
-            connect(carbutton, SIGNAL(clicked()), this, SLOT(on_carInsuranceButton_clicked()));
+            connect(carbutton, SIGNAL(clicked()),
+                    this, SLOT(on_carInsuranceButton_clicked()));
 
             QPushButton* healthbutton = new QPushButton("Health insurance");
-            connect(healthbutton, SIGNAL(clicked()), this, SLOT(on_healthInsuranceButton_clicked()));
+            connect(healthbutton, SIGNAL(clicked()),
+                    this, SLOT(on_healthInsuranceButton_clicked()));
 
             QPushButton* homebutton = new QPushButton("Home insurance");
-            connect(homebutton, SIGNAL(clicked()), this, SLOT(on_homeInsuranceButton_clicked()));
+            connect(homebutton, SIGNAL(clicked()),
+                    this, SLOT(on_homeInsuranceButton_clicked()));
 
             widgetLayout->addWidget(carbutton, 0, 0);
             widgetLayout->addWidget(healthbutton, 1, 0);
@@ -107,11 +114,13 @@ void MainWindow::changeWidget(widgetStatus status){
 
             QLabel* valueLabel = new QLabel("Insurance's value:");
             QLineEdit* valueEdit = new QLineEdit();
-            valueEdit->setValidator(new QDoubleValidator(0, 999999, 3));
+            QDoubleValidator* validator = new QDoubleValidator(0, 999999, 3);
+            valueEdit->setValidator(validator);
+            qDebug()<<validator->locale();
             widgetLayout->addWidget(valueLabel, 3, 0);
             widgetLayout->addWidget(valueEdit, 3, 1);
 
-            QLabel* dateLabel = new QLabel("Insurance starting date:");
+            QLabel* dateLabel = new QLabel("Insurance ending date:");
             QDateEdit* dateEdit = new QDateEdit();
             widgetLayout->addWidget(dateLabel, 4, 0);
             widgetLayout->addWidget(dateEdit, 4, 1);
@@ -128,6 +137,8 @@ void MainWindow::changeWidget(widgetStatus status){
 
             QPushButton* submitButton = new QPushButton("Submit");
             widgetLayout->addWidget(submitButton, 7, 0);
+            connect(submitButton, SIGNAL(clicked()),
+                    this, SLOT(on_submitCarButton_clicked()));
             break;
         }
         case widgetStatus::addHealth:{//HealthInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceCity);
@@ -135,12 +146,90 @@ void MainWindow::changeWidget(widgetStatus status){
                 changeWidget(widgetStatus::hide);
             widgetLayout = new QGridLayout(ui->widget);
 
+            QLabel* idLabel = new QLabel("Insuranse's id:");
+            QLineEdit* idEdit = new QLineEdit();
+            idEdit->setValidator(new QIntValidator(0, 99999));
+            widgetLayout->addWidget(idLabel, 0, 0);
+            widgetLayout->addWidget(idEdit, 0, 1);
+
+            QLabel* nameLabel = new QLabel("Insuranse's owner name:");
+            QLineEdit* nameEdit = new QLineEdit();
+            widgetLayout->addWidget(nameLabel, 1, 0);
+            widgetLayout->addWidget(nameEdit, 1, 1);
+
+            QLabel* surnameLabel = new QLabel("Insurance's owner surname:");
+            QLineEdit* surnameEdit = new QLineEdit();
+            widgetLayout->addWidget(surnameLabel, 2, 0);
+            widgetLayout->addWidget(surnameEdit, 2, 1);
+
+            QLabel* valueLabel = new QLabel("Insurance's value:");
+            QLineEdit* valueEdit = new QLineEdit();
+            valueEdit->setValidator(new QDoubleValidator(0, 999999, 3));
+            widgetLayout->addWidget(valueLabel, 3, 0);
+            widgetLayout->addWidget(valueEdit, 3, 1);
+
+            QLabel* dateLabel = new QLabel("Insurance ending date:");
+            QDateEdit* dateEdit = new QDateEdit();
+            widgetLayout->addWidget(dateLabel, 4, 0);
+            widgetLayout->addWidget(dateEdit, 4, 1);
+            qDebug()<<dateEdit->date().isNull();
+
+            QLabel* insCityLabel = new QLabel("City:");
+            QLineEdit* insCityEdit = new QLineEdit();
+            widgetLayout->addWidget(insCityLabel, 5, 0);
+            widgetLayout->addWidget(insCityEdit, 5, 1);
+
+            QPushButton* submitButton = new QPushButton("Submit");
+            widgetLayout->addWidget(submitButton, 7, 0);
+            connect(submitButton, SIGNAL(clicked()),
+                    this, SLOT(on_submitHealthButton_clicked()));
             break;
         }
         case widgetStatus::addHome:{//HomeInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceObj, double HomeArea);
             if(currentStatus != widgetStatus::hide)
                 changeWidget(widgetStatus::hide);
             widgetLayout = new QGridLayout(ui->widget);
+
+            QLabel* idLabel = new QLabel("Insuranse's id:");
+            QLineEdit* idEdit = new QLineEdit();
+            widgetLayout->addWidget(idLabel, 0, 0);
+            widgetLayout->addWidget(idEdit, 0, 1);
+
+            QLabel* nameLabel = new QLabel("Insuranse's owner name:");
+            QLineEdit* nameEdit = new QLineEdit();
+            widgetLayout->addWidget(nameLabel, 1, 0);
+            widgetLayout->addWidget(nameEdit, 1, 1);
+
+            QLabel* surnameLabel = new QLabel("Insurance's owner surname:");
+            QLineEdit* surnameEdit = new QLineEdit();
+            widgetLayout->addWidget(surnameLabel, 2, 0);
+            widgetLayout->addWidget(surnameEdit, 2, 1);
+
+            QLabel* valueLabel = new QLabel("Insurance's value:");
+            QLineEdit* valueEdit = new QLineEdit();
+            valueEdit->setValidator(new QDoubleValidator(0, 999999, 3));
+            widgetLayout->addWidget(valueLabel, 3, 0);
+            widgetLayout->addWidget(valueEdit, 3, 1);
+
+            QLabel* dateLabel = new QLabel("Insurance ending date:");
+            QDateEdit* dateEdit = new QDateEdit();
+            widgetLayout->addWidget(dateLabel, 4, 0);
+            widgetLayout->addWidget(dateEdit, 4, 1);
+
+            QLabel* insObjLabel = new QLabel("House adress:");
+            QLineEdit* insObjEdit = new QLineEdit();
+            widgetLayout->addWidget(insObjLabel, 5, 0);
+            widgetLayout->addWidget(insObjEdit, 5, 1);
+
+            QLabel* areaLabel = new QLabel("House's area:");
+            QLineEdit* areaEdit = new QLineEdit();
+            widgetLayout->addWidget(areaLabel, 6, 0);
+            widgetLayout->addWidget(areaEdit, 6, 1);
+
+            QPushButton* submitButton = new QPushButton("Submit");
+            widgetLayout->addWidget(submitButton, 7, 0);
+            connect(submitButton, SIGNAL(clicked()),
+                    this, SLOT(on_submitHomeButton_clicked()));
             break;
         }
     }
@@ -168,10 +257,6 @@ void MainWindow::on_pushButton_3_clicked()
     drawTable();
 }
 
-void MainWindow::test(int i){
-    qDebug()<<i;
-}
-
 void MainWindow::on_addButton_clicked()
 {
     changeWidget(widgetStatus::add);
@@ -179,7 +264,13 @@ void MainWindow::on_addButton_clicked()
 
 void MainWindow::on_removeButton_clicked()
 {
-    changeWidget(widgetStatus::hide);
+    int rowNum = table->currentRow();
+    if(data.empty())
+        return;
+    data.removeAt(rowNum);
+    //list.removeAt(rowNum);
+
+    drawTable();
 }
 
 void MainWindow::on_carInsuranceButton_clicked(){
@@ -195,4 +286,91 @@ void MainWindow::on_healthInsuranceButton_clicked(){
 void MainWindow::on_homeInsuranceButton_clicked(){
     qDebug()<<"home insurance clicked";
     changeWidget(widgetStatus::addHome);
+}
+
+void MainWindow::on_submitHomeButton_clicked(){
+    QLineEdit* idEdit      = (QLineEdit*)(widgetLayout->itemAtPosition(0, 1)->widget());
+    QLineEdit* nameEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(1, 1)->widget());
+    QLineEdit* surnameEdit = (QLineEdit*)(widgetLayout->itemAtPosition(2, 1)->widget());
+    QLineEdit* valueEdit   = (QLineEdit*)(widgetLayout->itemAtPosition(3, 1)->widget());
+    QDateEdit* dateEdit    = (QDateEdit*)(widgetLayout->itemAtPosition(4, 1)->widget());
+    QLineEdit* insObjEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
+    QLineEdit* areaEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(6, 1)->widget());
+
+    if(idEdit     ->text() == "")
+        return;
+    if(nameEdit   ->text() == "")
+        return;
+    if(surnameEdit->text() == "")
+        return;
+    if(valueEdit  ->text() == "")
+        return;
+    if(insObjEdit ->text() == "")
+        return;
+    if(areaEdit   ->text() == "")
+        return;
+
+    Insurance* item = new HomeInsurance(idEdit->text().toInt(), nameEdit->text(),
+                                        surnameEdit->text(), locale->toDouble(valueEdit->text()),
+                                        dateEdit->date(), insObjEdit->text(), areaEdit->text().toDouble());
+    data.append(item);
+    drawTable();
+    changeWidget(widgetStatus::hide);
+}
+
+void MainWindow::on_submitHealthButton_clicked(){
+    QLineEdit* idEdit      = (QLineEdit*)(widgetLayout->itemAtPosition(0, 1)->widget());
+    QLineEdit* nameEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(1, 1)->widget());
+    QLineEdit* surnameEdit = (QLineEdit*)(widgetLayout->itemAtPosition(2, 1)->widget());
+    QLineEdit* valueEdit   = (QLineEdit*)(widgetLayout->itemAtPosition(3, 1)->widget());
+    QDateEdit* dateEdit    = (QDateEdit*)(widgetLayout->itemAtPosition(4, 1)->widget());
+    QLineEdit* cityEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
+
+    if(idEdit     ->text() == "")
+        return;
+    if(nameEdit   ->text() == "")
+        return;
+    if(surnameEdit->text() == "")
+        return;
+    if(valueEdit  ->text() == "")
+        return;
+    if(cityEdit   ->text() == "")
+        return;
+
+    Insurance* item = new HealthInsurance(idEdit->text().toInt(), nameEdit->text(),
+                                          surnameEdit->text(), locale->toDouble(valueEdit->text()),
+                                          dateEdit->date(), cityEdit->text());
+    data.append(item);
+    drawTable();
+    changeWidget(widgetStatus::hide);
+}
+
+void MainWindow::on_submitCarButton_clicked(){
+    QLineEdit* idEdit      = (QLineEdit*)(widgetLayout->itemAtPosition(0, 1)->widget());
+    QLineEdit* nameEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(1, 1)->widget());
+    QLineEdit* surnameEdit = (QLineEdit*)(widgetLayout->itemAtPosition(2, 1)->widget());
+    QLineEdit* valueEdit   = (QLineEdit*)(widgetLayout->itemAtPosition(3, 1)->widget());
+    QDateEdit* dateEdit    = (QDateEdit*)(widgetLayout->itemAtPosition(4, 1)->widget());
+    QLineEdit* insObjEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
+    QLineEdit* carVINEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(6, 1)->widget());
+
+    if(idEdit     ->text() == "")
+        return;
+    if(nameEdit   ->text() == "")
+        return;
+    if(surnameEdit->text() == "")
+        return;
+    if(valueEdit  ->text() == "")
+        return;
+    if(insObjEdit ->text() == "")
+        return;
+    if(carVINEdit ->text() == "")
+        return;
+
+    Insurance* item = new CarInsurance(idEdit->text().toInt(), nameEdit->text(),
+                                       surnameEdit->text(), locale->toDouble(valueEdit->text()),
+                                       dateEdit->date(), insObjEdit->text(), carVINEdit->text().toInt());
+    data.append(item);
+    drawTable();
+    changeWidget(widgetStatus::hide);
 }

@@ -50,7 +50,11 @@ private slots:
 
     void on_homeInsuranceButton_clicked();
 
-    void test(int);
+    void on_submitHomeButton_clicked();
+
+    void on_submitHealthButton_clicked();
+
+    void on_submitCarButton_clicked();
 
 private:
     void drawTable();
@@ -62,6 +66,7 @@ private:
     Ui::MainWindow *ui;
     QTableWidget* table;
     QList<Insurance*> data;
+    QLocale* locale;
 
     QGridLayout* widgetLayout;
     widgetStatus currentStatus;
