@@ -36,27 +36,27 @@
     </column>
     <column>
      <property name="text">
-      <string>name</string>
+      <string>Имя</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>value</string>
+      <string>Ценность</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>ending date</string>
+      <string>Дата окончания</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>insurancy object</string>
+      <string>Объект страхования</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>other information</string>
+      <string>Доп. информация</string>
      </property>
     </column>
    </widget>
@@ -66,7 +66,7 @@
       <x>20</x>
       <y>430</y>
       <width>151</width>
-      <height>150</height>
+      <height>122</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -110,9 +110,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>610</y>
+      <y>560</y>
       <width>191</width>
-      <height>101</height>
+      <height>211</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -130,6 +130,27 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="findButton">
+       <property name="text">
+        <string>Найти</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="editButton">
+       <property name="text">
+        <string>Редактировать</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="discardButton">
+       <property name="text">
+        <string>Сбросить</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -142,8 +163,33 @@
      <height>31</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="openAction"/>
+    <addaction name="separator"/>
+    <addaction name="saveAction"/>
+    <addaction name="saveAtAction"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="saveAction">
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="saveAtAction">
+   <property name="text">
+    <string>Сохранить как...</string>
+   </property>
+  </action>
+  <action name="openAction">
+   <property name="text">
+    <string>Открыть</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

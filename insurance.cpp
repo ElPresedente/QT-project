@@ -20,3 +20,7 @@ QString Insurance::getEndingDate()
 {
     return endingDate.toString();
 }
+
+Insurance::~Insurance(){
+
+}

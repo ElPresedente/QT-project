@@ -1,7 +1,7 @@
 #include "healthinsurance.h"
 
 HealthInsurance::HealthInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceCity):
-    Insurance(Name, Surname, Id, Value, EndingDate, "Health"),
+    Insurance(Name, Surname, Id, Value, EndingDate, "Здоровье"),
     insuranceCity(InsuranceCity)
 {};
 QString HealthInsurance::getId()
@@ -16,5 +16,5 @@ QString HealthInsurance::getInsuranceObject()
 
 QString HealthInsurance::getAdditionalInfo()
 {
-    return QString("Insurance city:\n"+insuranceCity);
+    return QString("Город страхования:\n"+insuranceCity);
 }

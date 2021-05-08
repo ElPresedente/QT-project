@@ -6,7 +6,7 @@
 class Insurance
 {
 public:
-    //virtual ~Insurance();
+    virtual ~Insurance();
 
     QString name;
     QString surname;

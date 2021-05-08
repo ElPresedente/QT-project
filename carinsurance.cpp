@@ -12,11 +12,11 @@ QString CarInsurance::getId()
 
 QString CarInsurance::getInsuranceObject()
 {
-    return QString("Car num:\n"+insuranceObject);
+    return QString("Номер авто:\n"+insuranceObject);
 }
 
 QString CarInsurance::getAdditionalInfo()
 {
-    return QString("VIN number:\n"+QString::number(carVIN));
+    return QString("VIN номер:\n"+QString::number(carVIN));
 }
 

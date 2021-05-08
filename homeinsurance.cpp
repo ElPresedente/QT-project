@@ -13,10 +13,10 @@ QString HomeInsurance::getId()
 
 QString HomeInsurance::getInsuranceObject()
 {
-    return QString("House at:\n" + insuranceObject);
+    return QString("Адрес дома:\n" + insuranceObject);
 }
 
 QString HomeInsurance::getAdditionalInfo()
 {
-    return QString("House area: "+QString::number(homeArea));
+    return QString("Площадб дома: "+QString::number(homeArea));
 }

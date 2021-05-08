@@ -22,7 +22,8 @@ enum widgetStatus{
     add,
     addCar,
     addHome,
-    addHealth
+    addHealth,
+    find
 };
 
 class MainWindow : public QMainWindow
@@ -56,17 +57,34 @@ private slots:
 
     void on_submitCarButton_clicked();
 
+    void on_findButton_clicked();
+
+    void on_submitFindButton_clicked();
+
+    void on_discardButton_clicked();
+
+    void on_editButton_clicked();
+
+    void on_saveAction_triggered();
+
+    void on_saveAtAction_triggered();
+
+    void on_openAction_triggered();
+
 private:
     void drawTable();
     void setTableItem(Insurance* ptr, int rowNum);
     void changeWidget(widgetStatus);
-
-
+    void setEditMode(bool);
 
     Ui::MainWindow *ui;
     QTableWidget* table;
     QList<Insurance*> data;
     QLocale* locale;
+    QVector<int>* tableData; // ИЗМЕНИТЬ НАЗВАНИЕ
+    bool editMode;
+
+    QFile file;
 
     QGridLayout* widgetLayout;
     widgetStatus currentStatus;
