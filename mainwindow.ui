@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>40</y>
+      <y>10</y>
       <width>1041</width>
       <height>371</height>
      </rect>
@@ -171,6 +171,8 @@
     <addaction name="separator"/>
     <addaction name="saveAction"/>
     <addaction name="saveAtAction"/>
+    <addaction name="separator"/>
+    <addaction name="newAction"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -188,6 +190,11 @@
   <action name="openAction">
    <property name="text">
     <string>Открыть</string>
+   </property>
+  </action>
+  <action name="newAction">
+   <property name="text">
+    <string>Создать</string>
    </property>
   </action>
  </widget>

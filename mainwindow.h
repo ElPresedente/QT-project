@@ -12,6 +12,7 @@
 #include "carinsurance.h"
 #include "healthinsurance.h"
 #include "homeinsurance.h"
+#include "list.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -71,20 +72,23 @@ private slots:
 
     void on_openAction_triggered();
 
+    void on_newAction_triggered();
+
 private:
     void drawTable();
     void setTableItem(Insurance* ptr, int rowNum);
     void changeWidget(widgetStatus);
     void setEditMode(bool);
+    void writeToFile(QFile &file);
 
     Ui::MainWindow *ui;
     QTableWidget* table;
-    QList<Insurance*> data;
+    List<Insurance*> data;
     QLocale* locale;
     QVector<int>* tableData; // ИЗМЕНИТЬ НАЗВАНИЕ
     bool editMode;
 
-    QFile file;
+    QString filePath;
 
     QGridLayout* widgetLayout;
     widgetStatus currentStatus;

@@ -1,12 +1,16 @@
 #ifndef LIST_H
 #define LIST_H
 #include <cstddef>
+#include <stdexcept>
 
 template<typename T>
 class List
 {
 private:
-    struct Node;
+    struct Node{
+        T data;
+        Node* nextNode;
+    };
 public:
     List(){
         head = nullptr;
@@ -131,25 +135,25 @@ public:
         else if(m_length == 1 && iterator.m_node == head){
             delete head;
             head = tail = nullptr;
-            return;
-        }
-
-        if(iterator == begin()){
-            Node* nextnode = iterator.m_node->nextNode;
-            delete head;
-            head = nextnode;
-        }
-        else if(iterator == end()){
-            List<T>::Iterator i = begin();
-            for(; i.m_node->nextNode != iterator.m_node; i++);
-            delete tail;
-            tail = i.m_node;
         }
         else{
-            List<T>::Iterator i = begin();
-            for(; i.m_node->nextNode != iterator.m_node; i++);
-            i.m_node->nextNode = iterator.m_node->nextNode;
-            delete iterator.m_node;
+            if(iterator == begin()){
+                Node* nextnode = iterator.m_node->nextNode;
+                delete head;
+                head = nextnode;
+            }
+            else if(iterator.m_node == tail){
+                List<T>::Iterator i = begin();
+                for(; i.m_node->nextNode != iterator.m_node; i++);
+                delete tail;
+                tail = i.m_node;
+            }
+            else{
+                List<T>::Iterator i = begin();
+                for(; i.m_node->nextNode != iterator.m_node; i++);
+                i.m_node->nextNode = iterator.m_node->nextNode;
+                delete iterator.m_node;
+            }
         }
         m_length--;
     }
@@ -166,35 +170,52 @@ public:
 
     T at(int itemNum){
         if(m_length < itemNum){
-            return;
+            throw std::invalid_argument( "item is out of length" );
         }
         auto i = begin();
         for(int j = 0; j<itemNum; j++, i++);
         return i.m_node->data;
     }
 
+    void replace(int num, T item){
+        Iterator i = begin();
+        for(int j = 0; j < num; j++, i++);
+        i.m_node->data = item;
+    }
+
     Iterator begin(){
         return Iterator(head);
     }
     Iterator end()  {
-        return Iterator(tail);
+        return ++(Iterator(tail));
     }
 
-    size_t length(){
+    int length(){
         return m_length;
     }
-    size_t size(){
+    int size(){
         return m_length;
     };
+
+    bool empty(){
+        return ((m_length == 0)? true : false);
+    }
+
+    void clear(){
+        Node *node;
+        Node *currnode = head;
+        while(currnode != nullptr){
+            node = currnode;
+            currnode = node->nextNode;
+            delete node;
+        }
+        head = tail = nullptr;
+    }
 
 private:
-    struct Node{
-        T data;
-        Node* nextNode;
-    };
     Node* head;
     Node* tail;
-    size_t m_length;
+    int m_length;
 };
 
 #endif // LIST_H

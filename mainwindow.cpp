@@ -601,17 +601,40 @@ void MainWindow::setEditMode(bool state){
 
 void MainWindow::on_saveAction_triggered()
 {
-    if(!file.isOpen()){
+    if(filePath == ""){
         on_saveAtAction_triggered();
+        return;
     }
 
+    QFile file(filePath);
+    file.open(QIODevice::ReadWrite);
+    writeToFile(file);
+    file.close();
+}
+
+void MainWindow::on_saveAtAction_triggered()
+{
+    QFile file;
+    QString fileName = QFileDialog::getSaveFileName(this, "Сохранить как...", QDir::homePath(), "Data files (*.dat)");
+    if(fileName.length() == 0){
+        return;
+    }
+    filePath = fileName;
+    file.setFileName(fileName);
+    file.open(QIODevice::ReadWrite);
+    writeToFile(file);
+    file.close();
+}
+
+void MainWindow::writeToFile(QFile &file){
     QDataStream stream(&file);
 
-    for(auto i : data){
+    for(auto iter = data.begin(); iter != data.end(); iter++){
+        Insurance* i = iter;
         QString id = i->getId();
         if(id[0] == "C"){
             CarInsurance* carItem = dynamic_cast<CarInsurance*>(i);
-            stream<<"C"
+            stream<<1
                   <<carItem->id
                   <<carItem->name
                   <<carItem->surname
@@ -623,7 +646,7 @@ void MainWindow::on_saveAction_triggered()
         }
         else if(id[0] == "H"){
             HealthInsurance* healthItem = dynamic_cast<HealthInsurance*>(i);
-            stream<<"H"
+            stream<<2
                   <<healthItem->id
                   <<healthItem->name
                   <<healthItem->surname
@@ -633,7 +656,7 @@ void MainWindow::on_saveAction_triggered()
         }
         else if(id[0] == "B"){
             HomeInsurance* homeItem = dynamic_cast<HomeInsurance*>(i);
-            stream<<"B"
+            stream<<3
                   <<homeItem->id
                   <<homeItem->name
                   <<homeItem->surname
@@ -646,22 +669,79 @@ void MainWindow::on_saveAction_triggered()
     }
 }
 
-void MainWindow::on_saveAtAction_triggered()
-{
-    QStringList filters({"Data files (*.dat)"});
-
-    QFileDialog dialog(this);
-    dialog.setNameFilters(filters);
-    dialog.setDirectory(QDir::home());
-    if(file.isOpen()){
-        file.close();
-    }
-    file.setFileName(dialog.getSaveFileName());
-    file.open(QIODevice::ReadWrite);
-    on_saveAction_triggered();
-}
-
 void MainWindow::on_openAction_triggered()
 {
+    QString fileName = QFileDialog::getOpenFileName(this, "Открыть файл", QDir::homePath(), "Data files (*.dat)");
+    if(fileName.length() == 0){
+        return;
+    }
+    filePath = fileName;
+    data.clear();
 
+    QFile file(fileName);
+    file.open(QIODevice::ReadWrite);
+
+    QDataStream stream(&file);
+
+    while(!stream.atEnd()){
+        int type;
+        stream>>type;
+        qDebug()<<"get "<<type<<" type";
+        if(type == 1){
+            int id;
+            QString name;
+            QString surname;
+            QDate endingDate;
+            double value;
+            QString insuranceObject;
+            int carVIN;
+            stream>>id>>name>>surname>>
+                    endingDate>>value>>
+                    insuranceObject>>carVIN;
+            Insurance* item = new CarInsurance(id, name, surname, value, endingDate, insuranceObject, carVIN);
+            data.append(item);
+        }
+        else if(type == 2){
+            int id;
+            QString name;
+            QString surname;
+            QDate endingDate;
+            double value;
+            QString insuranceCity;
+            stream>>id>>name>>surname>>
+                    endingDate>>value>>
+                    insuranceCity;
+            Insurance* item = new HealthInsurance(id, name, surname, value, endingDate, insuranceCity);
+            data.append(item);
+        }
+        else if(type == 3){
+            int id;
+            QString name;
+            QString surname;
+            QDate endingDate;
+            double value;
+            QString insuranceObject;
+            double homeArea;
+            stream>>id>>name>>surname>>
+                    endingDate>>value>>
+                    insuranceObject>>homeArea;
+            Insurance* item = new HomeInsurance(id, name, surname, value, endingDate, insuranceObject, homeArea);
+            data.append(item);
+        }
+    }
+    file.close();
+    drawTable();
+}
+
+void MainWindow::on_newAction_triggered()
+{
+    QFile file;
+    QString fileName = QFileDialog::getSaveFileName(this, "Создать файл", QDir::homePath(), "Data files (*.dat)");
+    if(fileName.length() == 0){
+        return;
+    }
+    filePath = fileName;
+    file.setFileName(fileName);
+    file.open(QIODevice::ReadWrite);
+    file.close();
 }
