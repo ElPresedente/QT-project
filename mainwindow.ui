@@ -174,7 +174,15 @@
     <addaction name="separator"/>
     <addaction name="newAction"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="manualAction"/>
+    <addaction name="aboutProgAction"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="saveAction">
@@ -195,6 +203,16 @@
   <action name="newAction">
    <property name="text">
     <string>Создать</string>
+   </property>
+  </action>
+  <action name="manualAction">
+   <property name="text">
+    <string>Руководство</string>
+   </property>
+  </action>
+  <action name="aboutProgAction">
+   <property name="text">
+    <string>О программе</string>
    </property>
   </action>
  </widget>

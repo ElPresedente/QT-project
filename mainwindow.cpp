@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "aboutprogrambox.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -744,4 +745,15 @@ void MainWindow::on_newAction_triggered()
     file.setFileName(fileName);
     file.open(QIODevice::ReadWrite);
     file.close();
+}
+
+void MainWindow::on_aboutProgAction_triggered()
+{
+    AboutProgramBox* window = new AboutProgramBox(this);
+    window->exec();
+}
+
+void MainWindow::on_manualAction_triggered()
+{
+
 }

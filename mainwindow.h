@@ -74,6 +74,10 @@ private slots:
 
     void on_newAction_triggered();
 
+    void on_aboutProgAction_triggered();
+
+    void on_manualAction_triggered();
+
 private:
     void drawTable();
     void setTableItem(Insurance* ptr, int rowNum);
