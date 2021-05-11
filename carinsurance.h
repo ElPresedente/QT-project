@@ -5,9 +5,9 @@
 class CarInsurance : virtual public Insurance
 {
 public:
-    CarInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceObj, int CarVIN);
+    CarInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceObj, long long CarVIN);
 
-    int carVIN;
+    long long carVIN;
 
     QString getInsuranceObject();
 

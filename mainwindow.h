@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include <QList>
 #include <QWidget>
+#include <QMessageBox>
 #include <QtWidgets>
 #include <QIntValidator>
 #include <QDoubleValidator>
+#include <QRegExpValidator>
 #include <QTableWidget>
 #include <QGridLayout>
 #include "carinsurance.h"
@@ -77,6 +79,8 @@ private slots:
     void on_aboutProgAction_triggered();
 
     void on_manualAction_triggered();
+
+    void on_tableWidget_itemSelectionChanged();
 
 private:
     void drawTable();

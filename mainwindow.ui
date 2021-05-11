@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1083</width>
-    <height>859</height>
+    <width>1139</width>
+    <height>767</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>1041</width>
+      <width>1101</width>
       <height>371</height>
      </rect>
     </property>
@@ -31,17 +31,17 @@
     </property>
     <column>
      <property name="text">
-      <string>id</string>
+      <string>Номер договора</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>Имя</string>
+      <string>Страховщик</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>Ценность</string>
+      <string>Страховая сумма</string>
      </property>
     </column>
     <column>
@@ -63,13 +63,13 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>430</y>
+      <x>880</x>
+      <y>400</y>
       <width>151</width>
       <height>122</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="testButtons">
      <item>
       <widget class="QPushButton" name="pushButton">
        <property name="enabled">
@@ -100,7 +100,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>440</y>
+      <y>410</y>
       <width>451</width>
       <height>281</height>
      </rect>
@@ -109,8 +109,8 @@
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>560</y>
+      <x>20</x>
+      <y>410</y>
       <width>191</width>
       <height>211</height>
      </rect>
@@ -125,6 +125,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="removeButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Удалить</string>
        </property>
@@ -139,6 +142,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="editButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Редактировать</string>
        </property>
@@ -159,7 +165,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1083</width>
+     <width>1139</width>
      <height>31</height>
     </rect>
    </property>
@@ -213,6 +219,11 @@
   <action name="aboutProgAction">
    <property name="text">
     <string>О программе</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>кнопка</string>
    </property>
   </action>
  </widget>

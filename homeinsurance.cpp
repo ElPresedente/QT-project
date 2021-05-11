@@ -18,5 +18,5 @@ QString HomeInsurance::getInsuranceObject()
 
 QString HomeInsurance::getAdditionalInfo()
 {
-    return QString("Площадб дома: "+QString::number(homeArea));
+    return QString("Площадь дома: "+QString::number(homeArea));
 }

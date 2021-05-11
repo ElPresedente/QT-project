@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     table = ui->tableWidget;
+    table->setColumnWidth(0, 175);
+    table->setColumnWidth(2, 175);
     table->setColumnWidth(4, 200);
     table->setColumnWidth(5, 200);
 
@@ -20,8 +22,12 @@ MainWindow::MainWindow(QWidget *parent)
     currentStatus = widgetStatus::hide;
     locale = new QLocale();
     tableData = nullptr;
-
+    this->setFixedSize(this->size());
     setEditMode(false);
+
+    ui->pushButton->hide();
+    ui->pushButton_2->hide();
+    ui->pushButton_3->hide();
 }
 
 MainWindow::~MainWindow()
@@ -115,22 +121,26 @@ void MainWindow::changeWidget(widgetStatus status){
                 changeWidget(widgetStatus::hide);
             widgetLayout = new QGridLayout(ui->widget);
 
-            QLabel* idLabel = new QLabel("Insuranse's id:");
+            QLabel* idLabel = new QLabel("Номер договора:");
             QLineEdit* idEdit = new QLineEdit();
+            idEdit->setValidator(new QIntValidator(0, 99999));
             widgetLayout->addWidget(idLabel, 0, 0);
             widgetLayout->addWidget(idEdit, 0, 1);
 
-            QLabel* nameLabel = new QLabel("Insuranse's owner name:");
+            QLabel* nameLabel = new QLabel("Имя страховщика:");
             QLineEdit* nameEdit = new QLineEdit();
+            QRegExp nameExp(R"([А-Я][а-я]{20})");
+            nameEdit->setValidator(new QRegExpValidator(nameExp));
             widgetLayout->addWidget(nameLabel, 1, 0);
             widgetLayout->addWidget(nameEdit, 1, 1);
 
-            QLabel* surnameLabel = new QLabel("Insurance's owner surname:");
+            QLabel* surnameLabel = new QLabel("Фамилия страховщика:");
             QLineEdit* surnameEdit = new QLineEdit();
+            surnameEdit->setValidator(new QRegExpValidator(nameExp));
             widgetLayout->addWidget(surnameLabel, 2, 0);
             widgetLayout->addWidget(surnameEdit, 2, 1);
 
-            QLabel* valueLabel = new QLabel("Insurance's value:");
+            QLabel* valueLabel = new QLabel("Страховая сумма:");
             QLineEdit* valueEdit = new QLineEdit();
             QDoubleValidator* validator = new QDoubleValidator(0, 999999, 2);
             valueEdit->setValidator(validator);
@@ -138,22 +148,26 @@ void MainWindow::changeWidget(widgetStatus status){
             widgetLayout->addWidget(valueLabel, 3, 0);
             widgetLayout->addWidget(valueEdit, 3, 1);
 
-            QLabel* dateLabel = new QLabel("Insurance ending date:");
+            QLabel* dateLabel = new QLabel("Дата окончания договора:");
             QDateEdit* dateEdit = new QDateEdit();
             widgetLayout->addWidget(dateLabel, 4, 0);
             widgetLayout->addWidget(dateEdit, 4, 1);
 
-            QLabel* insObjLabel = new QLabel("Car number:");
+            QLabel* insObjLabel = new QLabel("Номер автомобиля:");
             QLineEdit* insObjEdit = new QLineEdit();
+            QRegExp rx(R"([а-я]\d{3}[а-я]{2})");
+            insObjEdit->setValidator(new QRegExpValidator(rx));
             widgetLayout->addWidget(insObjLabel, 5, 0);
             widgetLayout->addWidget(insObjEdit, 5, 1);
 
-            QLabel* carVINLabel = new QLabel("Car VIN number:");
+            QLabel* carVINLabel = new QLabel("VIN номер автомобиля:");
             QLineEdit* carVINEdit = new QLineEdit();
+            QRegExp re(R"([0-9]{17})");
+            carVINEdit->setValidator(new QRegExpValidator(re));
             widgetLayout->addWidget(carVINLabel, 6, 0);
             widgetLayout->addWidget(carVINEdit, 6, 1);
 
-            QPushButton* submitButton = new QPushButton("Submit");
+            QPushButton* submitButton = new QPushButton("Подтвердить");
             widgetLayout->addWidget(submitButton, 7, 0);
             connect(submitButton, SIGNAL(clicked()),
                     this, SLOT(on_submitCarButton_clicked()));
@@ -164,40 +178,43 @@ void MainWindow::changeWidget(widgetStatus status){
                 changeWidget(widgetStatus::hide);
             widgetLayout = new QGridLayout(ui->widget);
 
-            QLabel* idLabel = new QLabel("Insuranse's id:");
+            QLabel* idLabel = new QLabel("Номер договора:");
             QLineEdit* idEdit = new QLineEdit();
             idEdit->setValidator(new QIntValidator(0, 99999));
             widgetLayout->addWidget(idLabel, 0, 0);
             widgetLayout->addWidget(idEdit, 0, 1);
 
-            QLabel* nameLabel = new QLabel("Insuranse's owner name:");
+            QLabel* nameLabel = new QLabel("Имя страховщика:");
             QLineEdit* nameEdit = new QLineEdit();
+            QRegExp nameExp(R"([А-Я][а-я]{20})");
+            nameEdit->setValidator(new QRegExpValidator(nameExp));
             widgetLayout->addWidget(nameLabel, 1, 0);
             widgetLayout->addWidget(nameEdit, 1, 1);
 
-            QLabel* surnameLabel = new QLabel("Insurance's owner surname:");
+            QLabel* surnameLabel = new QLabel("Фамилия страховщика:");
             QLineEdit* surnameEdit = new QLineEdit();
+            surnameEdit->setValidator(new QRegExpValidator(nameExp));
             widgetLayout->addWidget(surnameLabel, 2, 0);
             widgetLayout->addWidget(surnameEdit, 2, 1);
 
-            QLabel* valueLabel = new QLabel("Insurance's value:");
+            QLabel* valueLabel = new QLabel("Страховая сумма:");
             QLineEdit* valueEdit = new QLineEdit();
             valueEdit->setValidator(new QDoubleValidator(0, 999999, 2));
             widgetLayout->addWidget(valueLabel, 3, 0);
             widgetLayout->addWidget(valueEdit, 3, 1);
 
-            QLabel* dateLabel = new QLabel("Insurance ending date:");
+            QLabel* dateLabel = new QLabel("Дата окончания договора:");
             QDateEdit* dateEdit = new QDateEdit();
             widgetLayout->addWidget(dateLabel, 4, 0);
             widgetLayout->addWidget(dateEdit, 4, 1);
             qDebug()<<dateEdit->date().isNull();
 
-            QLabel* insCityLabel = new QLabel("City:");
+            QLabel* insCityLabel = new QLabel("Город:");
             QLineEdit* insCityEdit = new QLineEdit();
             widgetLayout->addWidget(insCityLabel, 5, 0);
             widgetLayout->addWidget(insCityEdit, 5, 1);
 
-            QPushButton* submitButton = new QPushButton("Submit");
+            QPushButton* submitButton = new QPushButton("Подтвердить");
             widgetLayout->addWidget(submitButton, 7, 0);
             connect(submitButton, SIGNAL(clicked()),
                     this, SLOT(on_submitHealthButton_clicked()));
@@ -208,43 +225,48 @@ void MainWindow::changeWidget(widgetStatus status){
                 changeWidget(widgetStatus::hide);
             widgetLayout = new QGridLayout(ui->widget);
 
-            QLabel* idLabel = new QLabel("Insuranse's id:");
+            QLabel* idLabel = new QLabel("Номер договора:");
             QLineEdit* idEdit = new QLineEdit();
+            idEdit->setValidator(new QIntValidator(0, 99999));
             widgetLayout->addWidget(idLabel, 0, 0);
             widgetLayout->addWidget(idEdit, 0, 1);
 
-            QLabel* nameLabel = new QLabel("Insuranse's owner name:");
+            QLabel* nameLabel = new QLabel("Имя страховщика:");
             QLineEdit* nameEdit = new QLineEdit();
+            QRegExp nameExp(R"([А-Я][а-я]{20})");
+            nameEdit->setValidator(new QRegExpValidator(nameExp));
             widgetLayout->addWidget(nameLabel, 1, 0);
             widgetLayout->addWidget(nameEdit, 1, 1);
 
-            QLabel* surnameLabel = new QLabel("Insurance's owner surname:");
+            QLabel* surnameLabel = new QLabel("Фамилия страховщика:");
             QLineEdit* surnameEdit = new QLineEdit();
+            surnameEdit->setValidator(new QRegExpValidator(nameExp));
             widgetLayout->addWidget(surnameLabel, 2, 0);
             widgetLayout->addWidget(surnameEdit, 2, 1);
 
-            QLabel* valueLabel = new QLabel("Insurance's value:");
+            QLabel* valueLabel = new QLabel("Страховая сумма:");
             QLineEdit* valueEdit = new QLineEdit();
             valueEdit->setValidator(new QDoubleValidator(0, 999999, 2));
             widgetLayout->addWidget(valueLabel, 3, 0);
             widgetLayout->addWidget(valueEdit, 3, 1);
 
-            QLabel* dateLabel = new QLabel("Insurance ending date:");
+            QLabel* dateLabel = new QLabel("Дата окончания договора:");
             QDateEdit* dateEdit = new QDateEdit();
             widgetLayout->addWidget(dateLabel, 4, 0);
             widgetLayout->addWidget(dateEdit, 4, 1);
 
-            QLabel* insObjLabel = new QLabel("House adress:");
+            QLabel* insObjLabel = new QLabel("Адрес дома:");
             QLineEdit* insObjEdit = new QLineEdit();
             widgetLayout->addWidget(insObjLabel, 5, 0);
             widgetLayout->addWidget(insObjEdit, 5, 1);
 
-            QLabel* areaLabel = new QLabel("House's area:");
+            QLabel* areaLabel = new QLabel("Площадь дома:");
             QLineEdit* areaEdit = new QLineEdit();
+            areaEdit->setValidator(new QIntValidator(0, 99999));
             widgetLayout->addWidget(areaLabel, 6, 0);
             widgetLayout->addWidget(areaEdit, 6, 1);
 
-            QPushButton* submitButton = new QPushButton("Submit");
+            QPushButton* submitButton = new QPushButton("Подтвердить");
             widgetLayout->addWidget(submitButton, 7, 0);
             connect(submitButton, SIGNAL(clicked()),
                     this, SLOT(on_submitHomeButton_clicked()));
@@ -299,7 +321,7 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    Insurance *newdata = new HomeInsurance(3, "Вовка", "Коробка", 150.3, QDate(2006, 11, 7), "хуй знает чо писать", 250.5);
+    Insurance *newdata = new HomeInsurance(3, "Вовка", "Коробка", 150.3, QDate(2006, 11, 7), "тест", 250.5);
     data.append(newdata);
     drawTable();
 }
@@ -349,19 +371,25 @@ void MainWindow::on_submitHomeButton_clicked(){
     QDateEdit* dateEdit    = (QDateEdit*)(widgetLayout->itemAtPosition(4, 1)->widget());
     QLineEdit* insObjEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
     QLineEdit* areaEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(6, 1)->widget());
+    bool checked = false;
 
     if(idEdit     ->text() == "")
-        return;
+        checked = true;
     if(nameEdit   ->text() == "")
-        return;
+        checked = true;
     if(surnameEdit->text() == "")
-        return;
+        checked = true;
     if(valueEdit  ->text() == "")
-        return;
+        checked = true;
     if(insObjEdit ->text() == "")
-        return;
+        checked = true;
     if(areaEdit   ->text() == "")
+        checked = true;
+
+    if(checked){
+        QMessageBox::warning(this, "Ошибка", "Данные введены некорректно");
         return;
+    }
 
     if(editMode){
         int rowNum = table->currentRow();
@@ -390,17 +418,23 @@ void MainWindow::on_submitHealthButton_clicked(){
     QLineEdit* valueEdit   = (QLineEdit*)(widgetLayout->itemAtPosition(3, 1)->widget());
     QDateEdit* dateEdit    = (QDateEdit*)(widgetLayout->itemAtPosition(4, 1)->widget());
     QLineEdit* cityEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
+    bool checked = true;
 
     if(idEdit     ->text() == "")
-        return;
+        checked = true;
     if(nameEdit   ->text() == "")
-        return;
+        checked = true;
     if(surnameEdit->text() == "")
-        return;
+        checked = true;
     if(valueEdit  ->text() == "")
-        return;
+        checked = true;
     if(cityEdit   ->text() == "")
+        checked = true;
+
+    if(checked){
+        QMessageBox::warning(this, "Ошибка", "Данные введены некорректно");
         return;
+    }
 
     if(editMode){
         int rowNum = table->currentRow();
@@ -431,19 +465,27 @@ void MainWindow::on_submitCarButton_clicked(){
     QDateEdit* dateEdit    = (QDateEdit*)(widgetLayout->itemAtPosition(4, 1)->widget());
     QLineEdit* insObjEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
     QLineEdit* carVINEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(6, 1)->widget());
+    bool checked = false;
 
     if(idEdit     ->text() == "")
-        return;
+        checked = true;
     if(nameEdit   ->text() == "")
-        return;
+        checked = true;
     if(surnameEdit->text() == "")
-        return;
+        checked = true;
     if(valueEdit  ->text() == "")
+        checked = true;
+    if(insObjEdit ->text().length() != 6 )
+        checked = true;
+    if(carVINEdit ->text().length() != 17 )
+        checked = true;
+    if(checked){
+        QMessageBox::warning(this, "Ошибка", "Данные введены некорректно");
         return;
-    if(insObjEdit ->text() == "")
-        return;
-    if(carVINEdit ->text() == "")
-        return;
+    }
+
+    qDebug()<<carVINEdit->text()<<"   "<<carVINEdit->text().toLongLong();
+
     if(editMode){
         int rowNum = table->currentRow();
         Insurance* item = data.at(rowNum);
@@ -457,7 +499,7 @@ void MainWindow::on_submitCarButton_clicked(){
     else{
         Insurance* item = new CarInsurance(idEdit->text().toInt(), nameEdit->text(),
                                            surnameEdit->text(), locale->toDouble(valueEdit->text()),
-                                           dateEdit->date(), insObjEdit->text(), carVINEdit->text().toInt());
+                                           dateEdit->date(), insObjEdit->text(), carVINEdit->text().toLongLong());
         data.append(item);
     }
 
@@ -756,4 +798,11 @@ void MainWindow::on_aboutProgAction_triggered()
 void MainWindow::on_manualAction_triggered()
 {
 
+}
+
+void MainWindow::on_tableWidget_itemSelectionChanged()
+{
+    bool isEnabled = table->currentRow() != -1;
+    ui->editButton  ->setEnabled(isEnabled);
+    ui->removeButton->setEnabled(isEnabled);
 }

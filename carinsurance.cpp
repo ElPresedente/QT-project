@@ -1,6 +1,6 @@
 #include "carinsurance.h"
 
-CarInsurance::CarInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceObj, int CarVIN) :
+CarInsurance::CarInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceObj, long long CarVIN) :
     Insurance(Name, Surname, Id, Value, EndingDate, InsuranceObj),
     carVIN(CarVIN)
 {};
