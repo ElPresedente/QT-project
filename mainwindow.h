@@ -15,6 +15,8 @@
 #include "healthinsurance.h"
 #include "homeinsurance.h"
 #include "list.h"
+#include "aboutprogrambox.h"
+#include "manualbox.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -82,6 +84,8 @@ private slots:
 
     void on_tableWidget_itemSelectionChanged();
 
+    void on_exitAction_triggered();
+
 private:
     void drawTable();
     void setTableItem(Insurance* ptr, int rowNum);
@@ -97,6 +101,7 @@ private:
     bool editMode;
 
     QString filePath;
+    bool isModified;
 
     QGridLayout* widgetLayout;
     widgetStatus currentStatus;

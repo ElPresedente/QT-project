@@ -179,6 +179,8 @@
     <addaction name="saveAtAction"/>
     <addaction name="separator"/>
     <addaction name="newAction"/>
+    <addaction name="separator"/>
+    <addaction name="exitAction"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -194,6 +196,9 @@
   <action name="saveAction">
    <property name="text">
     <string>Сохранить</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="saveAtAction">
@@ -224,6 +229,11 @@
   <action name="action">
    <property name="text">
     <string>кнопка</string>
+   </property>
+  </action>
+  <action name="exitAction">
+   <property name="text">
+    <string>Выход</string>
    </property>
   </action>
  </widget>

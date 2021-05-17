@@ -198,7 +198,7 @@ public:
     };
 
     bool empty(){
-        return ((m_length == 0)? true : false);
+        return m_length == 0;
     }
 
     void clear(){
@@ -210,6 +210,7 @@ public:
             delete node;
         }
         head = tail = nullptr;
+        m_length = 0;
     }
 
 private:

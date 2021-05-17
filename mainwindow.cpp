@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "aboutprogrambox.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -310,6 +309,7 @@ void MainWindow::on_pushButton_clicked()
     Insurance *newdata = new CarInsurance(1, "nameee", "Surnamee", 150.3, QDate(2000, 10, 17), "test", 1204439232);
     data.append(newdata);
     drawTable();
+    isModified = true;
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -317,6 +317,7 @@ void MainWindow::on_pushButton_2_clicked()
     Insurance *newdata = new HealthInsurance(2, "Name", "Surname", 54.125, QDate(2002, 10, 17), "Orel");
     data.append(newdata);
     drawTable();
+    isModified = true;
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -324,6 +325,7 @@ void MainWindow::on_pushButton_3_clicked()
     Insurance *newdata = new HomeInsurance(3, "Вовка", "Коробка", 150.3, QDate(2006, 11, 7), "тест", 250.5);
     data.append(newdata);
     drawTable();
+    isModified = true;
 }
 
 void MainWindow::on_addButton_clicked()
@@ -346,6 +348,7 @@ void MainWindow::on_removeButton_clicked()
         tableData->removeAt(rowNum);
     }
     drawTable();
+    isModified = true;
 }
 
 void MainWindow::on_carInsuranceButton_clicked(){
@@ -409,6 +412,7 @@ void MainWindow::on_submitHomeButton_clicked(){
     }
     drawTable();
     changeWidget(widgetStatus::hide);
+    isModified = true;
 }
 
 void MainWindow::on_submitHealthButton_clicked(){
@@ -418,18 +422,28 @@ void MainWindow::on_submitHealthButton_clicked(){
     QLineEdit* valueEdit   = (QLineEdit*)(widgetLayout->itemAtPosition(3, 1)->widget());
     QDateEdit* dateEdit    = (QDateEdit*)(widgetLayout->itemAtPosition(4, 1)->widget());
     QLineEdit* cityEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
-    bool checked = true;
+    bool checked = false;
 
-    if(idEdit     ->text() == "")
+    if(idEdit     ->text() == ""){
+        qDebug()<<"idEdit false";
         checked = true;
-    if(nameEdit   ->text() == "")
+    }
+    if(nameEdit   ->text() == ""){
+        qDebug()<<"nameEdit false";
         checked = true;
-    if(surnameEdit->text() == "")
+    }
+    if(surnameEdit->text() == ""){
+        qDebug()<<"surnameEdit false";
         checked = true;
-    if(valueEdit  ->text() == "")
+    }
+    if(valueEdit  ->text() == ""){
+        qDebug()<<"value false";
         checked = true;
-    if(cityEdit   ->text() == "")
+    }
+    if(cityEdit   ->text() == ""){
+        qDebug()<<"cityEdit false";
         checked = true;
+    }
 
     if(checked){
         QMessageBox::warning(this, "Ошибка", "Данные введены некорректно");
@@ -455,6 +469,7 @@ void MainWindow::on_submitHealthButton_clicked(){
 
     drawTable();
     changeWidget(widgetStatus::hide);
+    isModified = true;
 }
 
 void MainWindow::on_submitCarButton_clicked(){
@@ -492,7 +507,7 @@ void MainWindow::on_submitCarButton_clicked(){
         delete item;
         item = new CarInsurance(idEdit->text().toInt(), nameEdit->text(),
                                 surnameEdit->text(), locale->toDouble(valueEdit->text()),
-                                dateEdit->date(), insObjEdit->text(), carVINEdit->text().toInt());
+                                dateEdit->date(), insObjEdit->text(), carVINEdit->text().toLongLong());
         data.replace(rowNum, item);
         setEditMode(false);
     }
@@ -505,6 +520,7 @@ void MainWindow::on_submitCarButton_clicked(){
 
     drawTable();
     changeWidget(widgetStatus::hide);
+    isModified = true;
 }
 
 void MainWindow::on_findButton_clicked()
@@ -550,6 +566,7 @@ void MainWindow::on_submitFindButton_clicked(){
     for(int i = 0; i < tableData->length(); i++){
         setTableItem(data.at(tableData->at(i)), i);
     }
+    isModified = true;
 }
 
 void MainWindow::on_discardButton_clicked()
@@ -558,8 +575,6 @@ void MainWindow::on_discardButton_clicked()
         delete tableData;
         tableData = nullptr;
     }
-
-
 
     drawTable();
     changeWidget(widgetStatus::hide);
@@ -671,6 +686,10 @@ void MainWindow::on_saveAtAction_triggered()
 
 void MainWindow::writeToFile(QFile &file){
     QDataStream stream(&file);
+    stream<<data.length();
+    if(data.length() == 0){
+        return;
+    }
 
     for(auto iter = data.begin(); iter != data.end(); iter++){
         Insurance* i = iter;
@@ -708,8 +727,8 @@ void MainWindow::writeToFile(QFile &file){
                   <<homeItem->insuranceObject
                   <<homeItem->homeArea;
         }
-
     }
+    isModified = false;
 }
 
 void MainWindow::on_openAction_triggered()
@@ -718,62 +737,80 @@ void MainWindow::on_openAction_triggered()
     if(fileName.length() == 0){
         return;
     }
+    if(filePath == fileName){
+        return;
+    }
     filePath = fileName;
-    data.clear();
+    if(data.length() != 0){
+        qDebug()<<"cleaning list";
+        data.clear();
+        qDebug()<<data.length();
+    }
 
     QFile file(fileName);
     file.open(QIODevice::ReadWrite);
 
     QDataStream stream(&file);
+    int length;
+    stream>>length;
 
-    while(!stream.atEnd()){
+    for(int i = 0; i < length; i++){
         int type;
         stream>>type;
         qDebug()<<"get "<<type<<" type";
-        if(type == 1){
-            int id;
-            QString name;
-            QString surname;
-            QDate endingDate;
-            double value;
-            QString insuranceObject;
-            int carVIN;
-            stream>>id>>name>>surname>>
-                    endingDate>>value>>
-                    insuranceObject>>carVIN;
-            Insurance* item = new CarInsurance(id, name, surname, value, endingDate, insuranceObject, carVIN);
-            data.append(item);
+        try{
+            if(type == 1){
+                int id;
+                QString name;
+                QString surname;
+                QDate endingDate;
+                double value;
+                QString insuranceObject;
+                long long carVIN;
+                stream>>id>>name>>surname>>
+                        endingDate>>value>>
+                        insuranceObject>>carVIN;
+                Insurance* item = new CarInsurance(id, name, surname, value, endingDate, insuranceObject, carVIN);
+                data.append(item);
+            }
+            else if(type == 2){
+                int id;
+                QString name;
+                QString surname;
+                QDate endingDate;
+                double value;
+                QString insuranceCity;
+                stream>>id>>name>>surname>>
+                        endingDate>>value>>
+                        insuranceCity;
+                Insurance* item = new HealthInsurance(id, name, surname, value, endingDate, insuranceCity);
+                data.append(item);
+            }
+            else if(type == 3){
+                int id;
+                QString name;
+                QString surname;
+                QDate endingDate;
+                double value;
+                QString insuranceObject;
+                double homeArea;
+                stream>>id>>name>>surname>>
+                        endingDate>>value>>
+                        insuranceObject>>homeArea;
+                Insurance* item = new HomeInsurance(id, name, surname, value, endingDate, insuranceObject, homeArea);
+                data.append(item);
+            }
+            qDebug()<<"On end: "<<stream.atEnd();
         }
-        else if(type == 2){
-            int id;
-            QString name;
-            QString surname;
-            QDate endingDate;
-            double value;
-            QString insuranceCity;
-            stream>>id>>name>>surname>>
-                    endingDate>>value>>
-                    insuranceCity;
-            Insurance* item = new HealthInsurance(id, name, surname, value, endingDate, insuranceCity);
-            data.append(item);
+        catch(QString str){
+            qDebug()<<str<<" error";
         }
-        else if(type == 3){
-            int id;
-            QString name;
-            QString surname;
-            QDate endingDate;
-            double value;
-            QString insuranceObject;
-            double homeArea;
-            stream>>id>>name>>surname>>
-                    endingDate>>value>>
-                    insuranceObject>>homeArea;
-            Insurance* item = new HomeInsurance(id, name, surname, value, endingDate, insuranceObject, homeArea);
-            data.append(item);
-        }
+
     }
+    qDebug()<<"readed!"<<data.length();
     file.close();
     drawTable();
+    isModified = false;
 }
 
 void MainWindow::on_newAction_triggered()
@@ -797,7 +834,8 @@ void MainWindow::on_aboutProgAction_triggered()
 
 void MainWindow::on_manualAction_triggered()
 {
-
+    ManualBox* window = new ManualBox(this);
+    window->exec();
 }
 
 void MainWindow::on_tableWidget_itemSelectionChanged()
@@ -805,4 +843,25 @@ void MainWindow::on_tableWidget_itemSelectionChanged()
     bool isEnabled = table->currentRow() != -1;
     ui->editButton  ->setEnabled(isEnabled);
     ui->removeButton->setEnabled(isEnabled);
+}
+
+void MainWindow::on_exitAction_triggered()
+{
+    qDebug()<<"exiting...";
+    if(isModified){
+        QMessageBox::StandardButton ret;
+        ret = QMessageBox::warning(this, "Text editor",
+                                   "Сохранить изменения?",
+                                   QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        if (ret == QMessageBox::Save)
+        {
+            on_saveAction_triggered();
+        }
+        if (ret == QMessageBox::Cancel)
+        {
+            return;
+        }
+
+    }
+    this->close();
 }

@@ -15,7 +15,8 @@ SOURCES += \
     healthinsurance.cpp \
     homeinsurance.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    manualbox.cpp
 
 HEADERS += \
     aboutprogrambox.h \
@@ -24,7 +25,8 @@ HEADERS += \
     healthinsurance.h \
     homeinsurance.h \
     list.h \
-    mainwindow.h
+    mainwindow.h \
+    manualbox.h
 
 FORMS += \
     mainwindow.ui
