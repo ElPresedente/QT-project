@@ -5,19 +5,28 @@
 
 class Insurance
 {
-public:
-    virtual ~Insurance();
-
+protected:
     QString name;
     QString surname;
     int id;
     double value; //максимальный размер компенсации
     QDate endingDate;
     QString insuranceObject; //номер машины/адрес дома/здоровье
+public:
+    virtual ~Insurance();
+
+
 
     QString getName();
     QString getValue();
     QString getEndingDate();
+
+    QString getFirstName();
+    QString getLastName();
+    int getIdNumber();
+    double getValueNumber();
+    QDate getDate();
+    QString getInsuranceData();
 
     virtual QString getId() = 0;
 

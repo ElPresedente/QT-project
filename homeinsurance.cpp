@@ -20,3 +20,7 @@ QString HomeInsurance::getAdditionalInfo()
 {
     return QString("Площадь дома: "+QString::number(homeArea));
 }
+
+double HomeInsurance::getHomeArea(){
+    return homeArea;
+}

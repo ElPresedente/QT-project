@@ -20,3 +20,6 @@ QString CarInsurance::getAdditionalInfo()
     return QString("VIN номер:\n"+QString::number(carVIN));
 }
 
+long long CarInsurance::getCarVIN(){
+    return carVIN;
+}

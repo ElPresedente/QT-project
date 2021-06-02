@@ -4,16 +4,18 @@
 
 class HomeInsurance : virtual public Insurance
 {
+protected:
+    double homeArea;
 public:
     HomeInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceObj, double HomeArea);
-
-    double homeArea;
 
     QString getInsuranceObject();
 
     QString getId();
 
     QString getAdditionalInfo();
+
+    double getHomeArea();
 };
 
 #endif // HOMEINSURANCE_H

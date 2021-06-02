@@ -18,3 +18,7 @@ QString HealthInsurance::getAdditionalInfo()
 {
     return QString("Город страхования:\n"+insuranceCity);
 }
+
+QString HealthInsurance::getInsuranceCity(){
+    return insuranceCity;
+}

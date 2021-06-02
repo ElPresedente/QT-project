@@ -12,20 +12,8 @@ private:
         Node* nextNode;
     };
 public:
-    List(){
-        head = nullptr;
-        tail = nullptr;
-        m_length = 0;
-    };
-    ~List(){
-        Node *node;
-        Node *currnode = head;
-        while(currnode != nullptr){
-            node = currnode;
-            currnode = node->nextNode;
-            delete node;
-        }
-    };
+    List();
+    ~List();
 
     class Iterator{
         friend class List;
@@ -78,110 +66,20 @@ public:
         };
     };
 
-    void push_back(const T& item){
-        if(m_length == 0){
-            Node *node = new Node();
-            node->data = item;
-            node->nextNode = nullptr;
-            head = tail = node;
-        }
-        else if(m_length == 1){
-            Node *node = new Node();
-            node->data = item;
-            node->nextNode = nullptr;
-            head->nextNode = node;
-            tail = node;
-        }
-        else{
-            Node *node = new Node();
-            node->data = item;
-            node->nextNode = nullptr;
-            tail->nextNode = node;
-            tail = node;
-        }
-        m_length++;
-    }
-    void push_front(const T& item){
-        if(m_length == 0){
-            Node *node = new Node();
-            node->data = item;
-            node->nextNode = nullptr;
-            tail = node;
-            head = node;
-        }
-        else if(m_length == 1){
-            Node *node = new Node();
-            node->data = item;
-            node->nextNode = tail;
-            head = node;
-        }
-        else{
-            Node *node = new Node();
-            node->data = item;
-            node->nextNode = head;
-            head = node;
-        }
-        m_length++;
-    }
+    void push_back(const T& item);
 
+    void push_front(const T& item);
     void append(const T& item){
         push_back(item);
     };
 
-    void remove(Iterator iterator){
-        if(m_length == 0){
-            return;
-        }
-        else if(m_length == 1 && iterator.m_node == head){
-            delete head;
-            head = tail = nullptr;
-        }
-        else{
-            if(iterator == begin()){
-                Node* nextnode = iterator.m_node->nextNode;
-                delete head;
-                head = nextnode;
-            }
-            else if(iterator.m_node == tail){
-                List<T>::Iterator i = begin();
-                for(; i.m_node->nextNode != iterator.m_node; i++);
-                delete tail;
-                tail = i.m_node;
-            }
-            else{
-                List<T>::Iterator i = begin();
-                for(; i.m_node->nextNode != iterator.m_node; i++);
-                i.m_node->nextNode = iterator.m_node->nextNode;
-                delete iterator.m_node;
-            }
-        }
-        m_length--;
-    }
+    void remove(Iterator iterator);
 
-    void removeAt(int itemNum){
-        if(m_length < itemNum){
-            return;
-        }
-        auto i = begin();
-        for(int j = 0; j<itemNum; j++, i++);
-        remove(i);
-        return;
-    }
+    void removeAt(int itemNum);
 
-    T at(int itemNum){
-        if(m_length < itemNum){
-            throw std::invalid_argument( "item is out of length" );
-        }
-        auto i = begin();
-        for(int j = 0; j<itemNum; j++, i++);
-        return i.m_node->data;
-    }
+    T at(int itemNum);
 
-    void replace(int num, T item){
-        Iterator i = begin();
-        for(int j = 0; j < num; j++, i++);
-        i.m_node->data = item;
-    }
+    void replace(int num, T item);
 
     Iterator begin(){
         return Iterator(head);
@@ -201,17 +99,7 @@ public:
         return m_length == 0;
     }
 
-    void clear(){
-        Node *node;
-        Node *currnode = head;
-        while(currnode != nullptr){
-            node = currnode;
-            currnode = node->nextNode;
-            delete node;
-        }
-        head = tail = nullptr;
-        m_length = 0;
-    }
+    void clear();
 
 private:
     Node* head;
@@ -219,4 +107,144 @@ private:
     int m_length;
 };
 
+template<typename T>
+List<T>::List()
+{
+        head = nullptr;
+        tail = nullptr;
+        m_length = 0;
+    };
 #endif // LIST_H
+
+template<typename T>
+List<T>::~List<T>(){
+    {
+        Node *node;
+        Node *currnode = head;
+        while(currnode != nullptr){
+            node = currnode;
+            currnode = node->nextNode;
+            delete node;
+        }
+    }
+}
+
+template<typename T>
+void List<T>::push_back(const T& item){
+    if(m_length == 0){
+        Node *node = new Node();
+        node->data = item;
+        node->nextNode = nullptr;
+        head = tail = node;
+    }
+    else if(m_length == 1){
+        Node *node = new Node();
+        node->data = item;
+        node->nextNode = nullptr;
+        head->nextNode = node;
+        tail = node;
+    }
+    else{
+        Node *node = new Node();
+        node->data = item;
+        node->nextNode = nullptr;
+        tail->nextNode = node;
+        tail = node;
+    }
+    m_length++;
+}
+
+template<typename T>
+void List<T>::push_front(const T& item){
+    if(m_length == 0){
+        Node *node = new Node();
+        node->data = item;
+        node->nextNode = nullptr;
+        tail = node;
+        head = node;
+    }
+    else if(m_length == 1){
+        Node *node = new Node();
+        node->data = item;
+        node->nextNode = tail;
+        head = node;
+    }
+    else{
+        Node *node = new Node();
+        node->data = item;
+        node->nextNode = head;
+        head = node;
+    }
+    m_length++;
+}
+template<typename T>
+void List<T>::remove(Iterator iterator){
+    if(m_length == 0){
+        return;
+    }
+    else if(m_length == 1 && iterator.m_node == head){
+        delete head;
+        head = tail = nullptr;
+    }
+    else{
+        if(iterator == begin()){
+            Node* nextnode = iterator.m_node->nextNode;
+            delete head;
+            head = nextnode;
+        }
+        else if(iterator.m_node == tail){
+            List<T>::Iterator i = begin();
+            for(; i.m_node->nextNode != iterator.m_node; i++);
+            delete tail;
+            tail = i.m_node;
+        }
+        else{
+            List<T>::Iterator i = begin();
+            for(; i.m_node->nextNode != iterator.m_node; i++);
+            i.m_node->nextNode = iterator.m_node->nextNode;
+            delete iterator.m_node;
+        }
+    }
+    m_length--;
+}
+
+template<typename T>
+void List<T>::removeAt(int itemNum){
+    if(m_length < itemNum){
+        return;
+    }
+    auto i = begin();
+    for(int j = 0; j<itemNum; j++, i++);
+    remove(i);
+    return;
+}
+
+template<typename T>
+T List<T>::at(int itemNum){
+    if(m_length < itemNum){
+        throw std::invalid_argument( "item is out of length" );
+    }
+    auto i = begin();
+    for(int j = 0; j<itemNum; j++, i++);
+    return i.m_node->data;
+}
+
+template<typename T>
+void List<T>::replace(int num, T item){
+    Iterator i = begin();
+    for(int j = 0; j < num; j++, i++);
+    i.m_node->data = item;
+}
+
+template<typename T>
+void List<T>::clear(){
+    Node *node;
+    Node *currnode = head;
+    while(currnode != nullptr){
+        node = currnode;
+        currnode = node->nextNode;
+        delete node;
+    }
+    head = tail = nullptr;
+    m_length = 0;
+}

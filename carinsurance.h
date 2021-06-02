@@ -4,16 +4,16 @@
 
 class CarInsurance : virtual public Insurance
 {
+protected:
+    long long carVIN;
 public:
     CarInsurance(int Id, QString Name, QString Surname, double Value, QDate EndingDate, QString InsuranceObj, long long CarVIN);
-
-    long long carVIN;
 
     QString getInsuranceObject();
 
     QString getId();
 
-    //QString getCarVIN();
+    long long getCarVIN();
 
     QString getAdditionalInfo();
 };

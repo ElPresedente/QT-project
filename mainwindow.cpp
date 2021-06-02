@@ -547,13 +547,13 @@ void MainWindow::on_submitFindButton_clicked(){
     for(int i = 0; i < data.length(); i++){
         bool checked = true;
         Insurance* currentItem = data.at(i);
-        if(name.length() != 0 && currentItem->name != name){
+        if(name.length() != 0 && currentItem->getFirstName() != name){
             checked = false;
         }
-        if(surname.length() != 0 && currentItem->surname != surname){
+        if(surname.length() != 0 && currentItem->getLastName() != surname){
             checked = false;
         }
-        if(searchDate && currentItem->endingDate != date){
+        if(searchDate && currentItem->getDate() != date){
             checked = false;
         }
 
@@ -597,13 +597,13 @@ void MainWindow::on_editButton_clicked()
         QLineEdit* insObjEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
         QLineEdit* carVINEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(6, 1)->widget());
 
-        idEdit      ->setText(QString::number(carItem->id));
-        nameEdit    ->setText(carItem->name);
-        surnameEdit ->setText(carItem->surname);
-        valueEdit   ->setText(locale->toString(carItem->value));
-        dateEdit    ->setDate(carItem->endingDate);
-        insObjEdit  ->setText(carItem->insuranceObject);
-        carVINEdit  ->setText(QString::number(carItem->carVIN));
+        idEdit      ->setText(QString::number(carItem->getIdNumber()));
+        nameEdit    ->setText(carItem->getFirstName());
+        surnameEdit ->setText(carItem->getLastName());
+        valueEdit   ->setText(locale->toString(carItem->getValueNumber()));
+        dateEdit    ->setDate(carItem->getDate());
+        insObjEdit  ->setText(carItem->getInsuranceData());
+        carVINEdit  ->setText(QString::number(carItem->getCarVIN()));
     }
     else if(id[0] == "H"){
         HealthInsurance* healthItem = dynamic_cast<HealthInsurance*>(item);
@@ -616,12 +616,12 @@ void MainWindow::on_editButton_clicked()
         QDateEdit* dateEdit    = (QDateEdit*)(widgetLayout->itemAtPosition(4, 1)->widget());
         QLineEdit* cityEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
 
-        idEdit      -> setText(QString::number(healthItem->id));
-        nameEdit    -> setText(healthItem->name);
-        surnameEdit -> setText(healthItem->surname);
-        valueEdit   -> setText(locale->toString(healthItem->value));
-        dateEdit    -> setDate(healthItem->endingDate);
-        cityEdit    -> setText(healthItem->insuranceCity);
+        idEdit      -> setText(QString::number(healthItem->getIdNumber()));
+        nameEdit    -> setText(healthItem->getFirstName());
+        surnameEdit -> setText(healthItem->getLastName());
+        valueEdit   -> setText(locale->toString(healthItem->getValueNumber()));
+        dateEdit    -> setDate(healthItem->getDate());
+        cityEdit    -> setText(healthItem->getInsuranceCity());
     }
     else if(id[0] == "B"){
         HomeInsurance* homeItem = dynamic_cast<HomeInsurance*>(item);
@@ -635,13 +635,13 @@ void MainWindow::on_editButton_clicked()
         QLineEdit* insObjEdit  = (QLineEdit*)(widgetLayout->itemAtPosition(5, 1)->widget());
         QLineEdit* areaEdit    = (QLineEdit*)(widgetLayout->itemAtPosition(6, 1)->widget());
 
-        idEdit      -> setText(QString::number(homeItem->id));
-        nameEdit    -> setText(homeItem->name);
-        surnameEdit -> setText(homeItem->surname);
-        valueEdit   -> setText(locale->toString(homeItem->value));
-        dateEdit    -> setDate(homeItem->endingDate);
-        insObjEdit  -> setText(homeItem->insuranceObject);
-        areaEdit    -> setText(QString::number(homeItem->homeArea));
+        idEdit      -> setText(QString::number(homeItem->getIdNumber()));
+        nameEdit    -> setText(homeItem->getFirstName());
+        surnameEdit -> setText(homeItem->getLastName());
+        valueEdit   -> setText(locale->toString(homeItem->getValueNumber()));
+        dateEdit    -> setDate(homeItem->getDate());
+        insObjEdit  -> setText(homeItem->getInsuranceData());
+        areaEdit    -> setText(QString::number(homeItem->getHomeArea()));
     }
     setEditMode(true);
 }
@@ -697,35 +697,35 @@ void MainWindow::writeToFile(QFile &file){
         if(id[0] == "C"){
             CarInsurance* carItem = dynamic_cast<CarInsurance*>(i);
             stream<<1
-                  <<carItem->id
-                  <<carItem->name
-                  <<carItem->surname
-                  <<carItem->endingDate
-                  <<carItem->value
-                  <<carItem->insuranceObject
-                  <<carItem->carVIN;
+                  <<carItem->getIdNumber()
+                  <<carItem->getFirstName()
+                  <<carItem->getLastName()
+                  <<carItem->getDate()
+                  <<carItem->getValueNumber()
+                  <<carItem->getInsuranceData()
+                  <<carItem->getCarVIN();
 
         }
         else if(id[0] == "H"){
             HealthInsurance* healthItem = dynamic_cast<HealthInsurance*>(i);
             stream<<2
-                  <<healthItem->id
-                  <<healthItem->name
-                  <<healthItem->surname
-                  <<healthItem->endingDate
-                  <<healthItem->value
-                  <<healthItem->insuranceCity;
+                  <<healthItem->getIdNumber()
+                  <<healthItem->getFirstName()
+                  <<healthItem->getLastName()
+                  <<healthItem->getDate()
+                  <<healthItem->getValueNumber()
+                  <<healthItem->getInsuranceCity();
         }
         else if(id[0] == "B"){
             HomeInsurance* homeItem = dynamic_cast<HomeInsurance*>(i);
             stream<<3
-                  <<homeItem->id
-                  <<homeItem->name
-                  <<homeItem->surname
-                  <<homeItem->endingDate
-                  <<homeItem->value
-                  <<homeItem->insuranceObject
-                  <<homeItem->homeArea;
+                  <<homeItem->getIdNumber()
+                  <<homeItem->getFirstName()
+                  <<homeItem->getLastName()
+                  <<homeItem->getDate()
+                  <<homeItem->getValueNumber()
+                  <<homeItem->getInsuranceData()
+                  <<homeItem->getHomeArea();
         }
     }
     isModified = false;
@@ -850,7 +850,7 @@ void MainWindow::on_exitAction_triggered()
     qDebug()<<"exiting...";
     if(isModified){
         QMessageBox::StandardButton ret;
-        ret = QMessageBox::warning(this, "Text editor",
+        ret = QMessageBox::warning(this, "Insurances manager",
                                    "Сохранить изменения?",
                                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         if (ret == QMessageBox::Save)

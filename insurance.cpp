@@ -24,3 +24,27 @@ QString Insurance::getEndingDate()
 Insurance::~Insurance(){
 
 }
+
+QString Insurance::getFirstName(){
+    return name;
+}
+
+QString Insurance::getLastName(){
+    return surname;
+}
+
+int Insurance::getIdNumber(){
+    return id;
+}
+
+double Insurance::getValueNumber(){
+    return value;
+}
+
+QDate Insurance::getDate(){
+    return endingDate;
+}
+
+QString Insurance::getInsuranceData(){
+    return insuranceObject;
+}
